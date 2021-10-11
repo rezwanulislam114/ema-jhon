@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useHistory } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import './SignIn.css'
 
@@ -7,7 +7,16 @@ const SignIn = () => {
 
     const { googleSignIn } = useAuth();
     const location = useLocation();
-    console.log(location.state?.form)
+    const history = useHistory();
+    const redirect_url = location.state?.from || '/'
+    const handleGoogleSignIn = () => {
+        googleSignIn()
+            .then(result => {
+                // result set in setUser
+                history.push(redirect_url)
+            })
+    }
+    // console.log("care from", location.state?.from)
 
     return (
         <div className="sign-in">
@@ -20,7 +29,7 @@ const SignIn = () => {
                 </form>
                 <br />
                 <h4>----------- or ---------</h4>
-                <button onClick={googleSignIn} className="btn-regular">Google Sign In</button>
+                <button onClick={handleGoogleSignIn} className="btn-regular">Google Sign In</button>
                 <br /><br /><br />
                 <p>new to ema-jhon?</p>
                 <Link to="/signup">Sign Up Here</Link>
